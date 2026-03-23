@@ -1,0 +1,103 @@
+services:
+  mlflow_db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: mlflow_user
+      POSTGRES_PASSWORD: mlflow_password
+      POSTGRES_DB: mlflow_db
+    volumes:
+      - mlflow_db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  data_db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: data_user
+      POSTGRES_PASSWORD: data_password
+      POSTGRES_DB: data_db
+    volumes:
+      - data_db_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    restart: unless-stopped
+
+  minio:
+    image: quay.io/minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      - MINIO_ROOT_USER=admin
+      - MINIO_ROOT_PASSWORD=supersecret
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    restart: unless-stopped
+
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c " sleep 5; /usr/bin/mc alias set myminio http://minio:9000 admin supersecret; /usr/bin/mc rm -r --force myminio/mlflows3; /usr/bin/mc mb myminio/mlflows3; /usr/bin/mc anonymous set public myminio/mlflows3; exit 0; "
+
+  mlflow:
+    build:
+      context: ./mlflow
+      dockerfile: Dockerfile
+    environment:
+      - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
+      - AWS_ACCESS_KEY_ID=admin
+      - AWS_SECRET_ACCESS_KEY=supersecret
+    depends_on:
+      - minio
+      - mlflow_db
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
+
+  jupyter:
+    build:
+      context: ./jupyter
+      dockerfile: Dockerfile
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - JUPYTER_TOKEN=mlflowtaller
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+      - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
+      - AWS_ACCESS_KEY_ID=admin
+      - AWS_SECRET_ACCESS_KEY=supersecret
+      - POSTGRES_HOST=data_db
+      - POSTGRES_USER=data_user
+      - POSTGRES_PASSWORD=data_password
+      - POSTGRES_DB=data_db
+    depends_on:
+      - mlflow
+      - data_db
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./:/home/jovyan/work
+    restart: always
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+      - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
+      - AWS_ACCESS_KEY_ID=admin
+      - AWS_SECRET_ACCESS_KEY=supersecret
+    depends_on:
+      - mlflow
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+volumes:
+  mlflow_db_data:
+  data_db_data:
+  minio_data:
