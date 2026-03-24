@@ -60,9 +60,9 @@ docker-compose up --build -d
 
 **Resultado obtenido:** Todos los contenedores fueron construidos exitosamente. Las imágenes `minio/mc` y `quay.io/minio/minio:latest` fueron descargadas (Pulled) y las imágenes `mlflow_taller-jupyter` y `mlflow_taller-api` fueron construidas localmente (Built) en ~446 segundos.
 
-**Evidencia:** `evidencias/contenedores_creados.png`
+**Evidencia:** `Evidencias/contenedores_creados.png`
 
-![Contenedores creados](evidencias/contenedores_creados.png)
+![Contenedores creados](Evidencias/contenedores_creados.png)
 
 ---
 
@@ -77,11 +77,11 @@ docker-compose ps
 
 **Resultado obtenido:** Todos los contenedores estaban activos: `mlflow_taller-jupyter-1` (healthy), `mlflow_taller-api-1`, `mlflow_taller-mlflow-1`, `mlflow_taller-data_db-1`, `mlflow_taller-mlflow_db-1` y `mlflow_taller-minio-1`, con sus puertos correctamente mapeados.
 
-**Evidencias:** `evidencias/DockerPS.png` · `evidencias/Servicios funcionando  y activos.png`
+**Evidencias:** `Evidencias/DockerPS.png` · `Evidencias/Servicios funcionando  y activos.png`
 
-![Docker PS](evidencias/DockerPS.png)
+![Docker PS](Evidencias/DockerPS.png)
 
-![Servicios activos](evidencias/Servicios%20funcionando%20%20y%20activos.png)
+![Servicios activos](Evidencias/Servicios%20funcionando%20%20y%20activos.png)
 
 ---
 
@@ -91,9 +91,9 @@ docker-compose ps
 
 **Resultado obtenido:** Los logs mostraron que MLflow completó todas las migraciones de Alembic sobre la base de datos `mlflow_db` y quedó escuchando en el puerto 5000.
 
-**Evidencia:** `evidencias/MLflow_funcionando.png`
+**Evidencia:** `Evidencias/MLflow_funcionando.png`
 
-![MLflow funcionando](evidencias/MLflow_funcionando.png)
+![MLflow funcionando](Evidencias/MLflow_funcionando.png)
 
 ---
 
@@ -105,9 +105,9 @@ docker-compose ps
 
 **Resultado obtenido:** El notebook se ejecutó completamente sin errores. La salida confirmó: `"Loaded 344 rows from CSV"` y `"Successfully saved to database table 'raw_penguins'"`.
 
-**Evidencia:** `evidencias/notebook data_setupejecutado.png`
+**Evidencia:** `Evidencias/notebook data_setupejecutado.png`
 
-![Notebook data_setup ejecutado](evidencias/notebook%20data_setupejecutado.png)
+![Notebook data_setup ejecutado](Evidencias/notebook%20data_setupejecutado.png)
 
 ---
 
@@ -117,9 +117,9 @@ docker-compose ps
 
 **Resultado obtenido:** El notebook se ejecutó correctamente. Se realizaron las 27 iteraciones del Grid Search. MLflow autolog registró automáticamente hiperparámetros, métricas y artefactos por cada run. Al finalizar, el mejor modelo fue registrado en el Model Registry bajo el nombre `PenguinModel`.
 
-**Evidencia:** `evidencias/notebook train ejecutado.png`
+**Evidencia:** `Evidencias/notebook train ejecutado.png`
 
-![Notebook train ejecutado](evidencias/notebook%20train%20ejecutado.png)
+![Notebook train ejecutado](Evidencias/notebook%20train%20ejecutado.png)
 
 ---
 
@@ -131,11 +131,11 @@ docker-compose ps
 
 **Resultado obtenido:** El experimento fue visible en la UI de MLflow con todos los runs completados (estado verde). Cada run incluía métricas de entrenamiento y referencias al dataset utilizado. La pestaña **Models** mostró los modelos registrados para cada run, incluyendo `PenguinModel` en el Model Registry.
 
-**Evidencias:** `evidencias/InterfazMLFlow.png` · `evidencias/Exprimentos MLFlow.png`
+**Evidencias:** `Evidencias/InterfazMLFlow.png` · `Evidencias/Exprimentos MLFlow.png`
 
-![Interfaz MLflow](evidencias/InterfazMLFlow.png)
+![Interfaz MLflow](Evidencias/InterfazMLFlow.png)
 
-![Experimentos MLflow](evidencias/Exprimentos%20MLFlow.png)
+![Experimentos MLflow](Evidencias/Exprimentos%20MLFlow.png)
 
 ---
 
@@ -147,9 +147,9 @@ docker-compose ps
 
 **Resultado obtenido:** El Object Browser de MinIO mostró el bucket `mlflows3` con múltiples carpetas de artefactos correspondientes a los runs del experimento, incluyendo los modelos entrenados.
 
-**Evidencia:** `evidencias/artefactosenMinIO.png`
+**Evidencia:** `Evidencias/artefactosenMinIO.png`
 
-![Artefactos en MinIO](evidencias/artefactosenMinIO.png)
+![Artefactos en MinIO](Evidencias/artefactosenMinIO.png)
 
 ---
 
@@ -161,9 +161,9 @@ docker-compose ps
 
 **Resultado obtenido:** La interfaz Swagger de la **Penguin ML API** fue accesible, mostrando correctamente los dos endpoints y los esquemas de datos (`PenguinData`, `HTTPValidationError`, `ValidationError`).
 
-**Evidencia:** `evidencias/Documentacion_API__Swager.png`
+**Evidencia:** `Evidencias/Documentacion_API__Swager.png`
 
-![Documentación API Swagger](evidencias/Documentacion_API__Swager.png)
+![Documentación API Swagger](Evidencias/Documentacion_API__Swager.png)
 
 ---
 
@@ -180,6 +180,6 @@ curl -X POST "http://localhost:8000/predict" \
 
 **Resultado obtenido:** La API respondió exitosamente con `{"prediction":"Gentoo"}`, confirmando que el modelo `PenguinModel` fue cargado correctamente desde MLflow y está sirviendo predicciones en tiempo real.
 
-**Evidencia:** `evidencias/predicción_solicitada_via_API.png`
+**Evidencia:** `Evidencias/predicción_solicitada_via_API.png`
 
-![Predicción via API](evidencias/predicci%C3%B3n_solicitada_via_API.png)
+![Predicción via API](Evidencias/predicci%C3%B3n_solicitada_via_API.png)
